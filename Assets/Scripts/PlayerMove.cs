@@ -8,16 +8,19 @@ public class PlayerMove : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5;
 
-    private Rigidbody2D rb;
     private SpriteRenderer spRenderer;
+    private Hand hand;
+    private Rigidbody2D rb;
     private Animator anim;
 
     private void Awake()
     {
+        spRenderer = GetComponentInChildren<SpriteRenderer>();
         rb= GetComponent<Rigidbody2D>();
-        spRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        hand = GetComponentInChildren<Hand>();
     }
+
     private void OnMove(InputValue value)
     {
         Vector2 vec = value.Get<Vector2>();
@@ -28,13 +31,15 @@ public class PlayerMove : MonoBehaviour
     {
         anim.SetFloat("Speed", rb.velocity.sqrMagnitude);
 
-        if(rb.velocity.x < 0)
+        if (rb.velocity.x < 0f)
         {
             spRenderer.flipX = true;
+            hand.FlipX(true);
         }
-        else if(rb.velocity.x > 0)
+        else if (rb.velocity.x > 0f)
         {
             spRenderer.flipX = false;
+            hand.FlipX(false);
         }
     }
 }
