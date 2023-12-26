@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
 public class Bullet : MonoBehaviour
 {
@@ -9,15 +10,17 @@ public class Bullet : MonoBehaviour
     [SerializeField] private int damage = 5;
 
     private BoxCollider2D col;
+    private Rigidbody2D rb;
     
     private void Awake()
     {
         col = GetComponent<BoxCollider2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
+    private void Start()
     {
-        transform.Translate(Vector2.up * moveSpeed * Time.deltaTime, Space.Self);
+        rb.velocity = transform.up * moveSpeed;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

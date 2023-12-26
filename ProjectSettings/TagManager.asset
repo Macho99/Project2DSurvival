@@ -50,3 +50,9 @@ TagManager:
   - name: Monster
     uniqueID: 578448275
     locked: 0
+  - name: Projectile
+    uniqueID: 3447106301
+    locked: 0
+  - name: UI
+    uniqueID: 1676979725
+    locked: 0
