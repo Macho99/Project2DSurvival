@@ -10,11 +10,22 @@ public class StateReady : WeaponState
 
     public override void Update()
     {
-        throw new System.NotImplementedException();
+        //nothing
     }
 
     public override void Use()
     {
-        throw new System.NotImplementedException();
+        owner.Effect();
+        owner.SubMagazineSize();
+        if (owner.IsTimeToReload())
+        {
+            owner.SetCurReloadTime();
+            owner.ChangeState(WeaponStateType.Reload);
+        }
+        else
+        {
+            owner.SetCurDelay();
+            owner.ChangeState(WeaponStateType.Delay);
+        }
     }
 }

@@ -2,17 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StateDelay : MonoBehaviour
+public class StateDelay : WeaponState
 {
-    // Start is called before the first frame update
-    void Start()
+    public StateDelay(Weapon weapon) : base(weapon)
     {
-        
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Update()
     {
-        
+        owner.SubDelay(Time.deltaTime);
+        if (owner.IsDelayPassed())
+        {
+            owner.ChangeState(WeaponStateType.Ready);
+        }
+    }
+
+    public override void Use()
+    {
+        //nothing
     }
 }

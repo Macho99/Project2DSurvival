@@ -12,10 +12,15 @@ public class Player : MonoBehaviour
     [SerializeField] UnityEvent onHpChange;
     [SerializeField] UnityEvent onLevelChange;
     [SerializeField] UnityEvent onKillMonster;
+    [SerializeField] UnityEvent onDelayChange;
+    [SerializeField] UnityEvent onReloadTimeChange;
 
     private PlayerMove playerMove;
     private PlayerAim playerAim;
     private Hand hand;
+
+    public float DelayRatio { get; private set; }
+    public float ReloadTimeRatio { get; private set; }
 
     public int CurExp {  get; private set; }
     public int MaxExp {  get; private set; }
@@ -31,6 +36,8 @@ public class Player : MonoBehaviour
     [SerializeField] private int healAmount = 1;
     [SerializeField] private float healDuration = 5f;
 
+    private Coroutine firePressedCoroutine;
+
     private void Awake()
     {
         playerMove = GetComponent<PlayerMove>();
@@ -44,6 +51,8 @@ public class Player : MonoBehaviour
         Level = 1;
         MaxExp = expTable[Level];
         KillCnt = 0;
+        DelayRatio = 1f;
+        ReloadTimeRatio = 1f;
     }
 
     private void Start()
@@ -72,6 +81,8 @@ public class Player : MonoBehaviour
         onExpChange?.Invoke();
         onKillMonster?.Invoke();
         onLevelChange?.Invoke();
+        onDelayChange?.Invoke();
+        onReloadTimeChange?.Invoke();
     }
 
     public Transform GetAimTransform()
@@ -83,7 +94,20 @@ public class Player : MonoBehaviour
     {
         if (value.isPressed)
         {
+            firePressedCoroutine = StartCoroutine(CoFirePress());
+        }
+        else
+        {
+            StopCoroutine(firePressedCoroutine);
+        }
+    }
+
+    private IEnumerator CoFirePress()
+    {
+        while (true)
+        {
             hand.Fire();
+            yield return null;
         }
     }
 
@@ -129,5 +153,17 @@ public class Player : MonoBehaviour
     private void Die()
     {
 
+    }
+
+    public void DelayChanged(float ratio)
+    {
+        DelayRatio = ratio;
+        onDelayChange?.Invoke();
+    }
+
+    public void ReloadTimeChanged(float ratio)
+    {
+        ReloadTimeRatio = ratio;
+        onReloadTimeChange?.Invoke();
     }
 }

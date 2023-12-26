@@ -14,7 +14,7 @@ public class Pistol : Weapon
         base.Start();
     }
 
-    public override void Use()
+    public override void Effect()
     {
         Bullet bullet = ObjPool.Instance.AllocateObj(ObjPoolType.Bullet).GetComponent<Bullet>();
         bullet.SetDirection(aimTrans.position, aimTrans.rotation);
