@@ -6,7 +6,7 @@ public class Spawner : MonoBehaviour
 {
     [SerializeField] private float spawnDist = 20;
     [SerializeField] private float spawnDuration = 1f;
-    [SerializeField] private Monster monsterPrefab;
+    //[SerializeField] private Monster monsterPrefab;
 
     private Transform playerTrans;
 
@@ -32,6 +32,8 @@ public class Spawner : MonoBehaviour
         pos *= spawnDist;
         pos += new Vector2(playerTrans.position.x, playerTrans.position.y);
 
-        Instantiate(monsterPrefab, pos, Quaternion.identity);
+        //Instantiate(monsterPrefab, pos, Quaternion.identity);
+        GameObject monster = ObjPool.Instance.AllocateObj(ObjPoolType.Monster);
+        monster.transform.position = pos;
     }
 }

@@ -10,27 +10,34 @@ public class Monster : MonoBehaviour
     [SerializeField] private float attackDist = 1f;
     [SerializeField] private float attackDelay = 0.5f;
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float curHp = 10;
-    [SerializeField] private float maxHp = 10;
+    [SerializeField] private int curHp = 10;
+    [SerializeField] private int maxHp = 10;
+    [SerializeField] private float returnDuration = 5f;
 
     private BoxCollider2D col;
     private Rigidbody2D rb;
-    private SpriteRenderer spRenderer;
+    private SpriteRenderer[] spRenderers;
     private Animator anim;
     private Coroutine moveCoroutine;
     private Transform playerTrans;
+    private Sprite initSprite;
 
     private void Awake()
     {
         col = GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
-        spRenderer = GetComponentInChildren<SpriteRenderer>();
+        spRenderers = GetComponentsInChildren<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        initSprite = spRenderers[0].sprite;
     }
 
     private void Start()
     {
         playerTrans = PlaySceneMaster.Instance.Player.transform;
+    }
+
+    private void OnEnable()
+    {
         moveCoroutine = StartCoroutine(CoMove());
     }
 
@@ -38,16 +45,17 @@ public class Monster : MonoBehaviour
     {
         if(rb.velocity.x < 0f)
         {
-            spRenderer.flipX = true;
+            spRenderers[0].flipX = true;
         }
         else if(rb.velocity.x > 0f)
         {
-            spRenderer.flipX = false;
+            spRenderers[0].flipX = false;
         }
     }
 
     private IEnumerator CoMove()
     {
+        yield return null;
         while (true)
         {
             if (IsInAttackDist())
@@ -86,11 +94,6 @@ public class Monster : MonoBehaviour
         yield return new WaitForSeconds(attackDelay);
     }
 
-    public void KnockBack(Vector2 dir, float force)
-    {
-        StartCoroutine(CoKnockBack(dir, force));
-    }
-
     private IEnumerator CoKnockBack(Vector2 dir, float force)
     {
         yield return new WaitUntil(() => {
@@ -114,10 +117,37 @@ public class Monster : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damage, Vector2 dir, float force)
+    {
+        TakeDamage(damage);
+        StartCoroutine(CoKnockBack(dir, force));
+    }
+
     private void Die()
     {
-        anim.SetTrigger("Dead");
+        anim.SetBool("Dead", true);
         col.enabled = false;
         StopCoroutine(moveCoroutine);
+        StartCoroutine(CoReturnObj());
+    }
+
+    private void OnDisable()
+    {
+        anim.SetBool("Dead", false);
+        foreach(SpriteRenderer sr in spRenderers)
+        {
+            Color color = sr.color;
+            color.a = 1f;
+            sr.color = color;
+        }
+        spRenderers[0].sprite = initSprite;
+        col.enabled = true;
+        curHp = maxHp;
+    }
+
+    private IEnumerator CoReturnObj()
+    {
+        yield return new WaitForSeconds(returnDuration);
+        ObjPool.Instance.ReturnObj(ObjPoolType.Monster, gameObject);
     }
 }

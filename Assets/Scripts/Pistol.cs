@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Pistol : Weapon
 {
-    [SerializeField] private Bullet bulletPrefab;
-
     protected override void Awake ()
     {
         base.Awake();
@@ -18,8 +16,7 @@ public class Pistol : Weapon
 
     public override void Use()
     {
-        Bullet bullet = Instantiate(bulletPrefab);
-        bullet.transform.position = aimTrans.position;
-        bullet.transform.rotation = aimTrans.rotation;
+        Bullet bullet = ObjPool.Instance.AllocateObj(ObjPoolType.Bullet).GetComponent<Bullet>();
+        bullet.SetDirection(aimTrans.position, aimTrans.rotation);
     }
 }
