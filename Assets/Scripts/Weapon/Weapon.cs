@@ -12,6 +12,8 @@ public abstract class Weapon : MonoBehaviour
     protected Player player;
     protected Transform aimTrans;
 
+
+
     protected virtual void Awake()
     {
         spRenderer = GetComponentInChildren<SpriteRenderer>();
