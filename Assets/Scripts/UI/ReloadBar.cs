@@ -29,4 +29,10 @@ public class ReloadBar : MonoBehaviour
             mask.gameObject.SetActive(true);
         }
     }
+
+    public void OnWeaponChange()
+    {
+        backGround.gameObject.SetActive(false);
+        mask.gameObject.SetActive(false);
+    }
 }

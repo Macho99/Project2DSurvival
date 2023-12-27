@@ -7,8 +7,13 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
     private static DataManager dataManager;
+    private static SkillManager skillManager;
     public static GameManager Instance { get { return instance; } }
     public static DataManager Data { get { return dataManager; } }
+    public static SkillManager Skill { get { return skillManager; } }
+
+    [SerializeField] DataManager dataManagerPrefab;
+    [SerializeField] SkillManager skillManagerPrefab;
 
     private void Awake()
     {
@@ -25,8 +30,10 @@ public class GameManager : MonoBehaviour
 
     private void InitManagers()
     {
-        GameObject dataObj = new GameObject("DataManager");
+        GameObject dataObj = Instantiate(dataManagerPrefab).gameObject;
         dataObj.transform.parent = transform;
-        dataManager = dataObj.AddComponent<DataManager>();
+
+        GameObject skillObj = Instantiate(skillManagerPrefab).gameObject;
+        skillObj.transform.parent = transform;
     }
 }

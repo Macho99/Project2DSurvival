@@ -61,6 +61,11 @@ public class Player : MonoBehaviour
         StartCoroutine(CoHeal());
     }
 
+    public Hand GetHand()
+    {
+        return hand;
+    }
+
     private IEnumerator CoHeal()
     {
         while (true)
@@ -102,6 +107,30 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnNum1(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            hand.OnNumPressed(1);
+        }
+    }
+
+    private void OnNum2(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            hand.OnNumPressed(2);
+        }
+    }
+
+    private void OnNum3(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            hand.OnNumPressed(3);
+        }
+    }
+
     private IEnumerator CoFirePress()
     {
         while (true)
@@ -124,7 +153,15 @@ public class Player : MonoBehaviour
         {
             Level++;
             CurExp -= MaxExp;
-            MaxExp = expTable[Level];
+
+            if(Level >= expTable.Length)
+            {
+                MaxExp = expTable[expTable.Length - 1];
+            }
+            else
+            {
+                MaxExp = expTable[Level];
+            }
 
             onLevelChange?.Invoke();
 

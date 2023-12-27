@@ -6,10 +6,13 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private int damage = 5;
     [SerializeField] private float returnTime = 5f;
-    [SerializeField] private float knockBackForce = 5f;
+
+
+    private int damage;
+    private float knockBackForce;
+    private float moveSpeed;
+    private int leftMonsterHits;
 
     private BoxCollider2D col;
     private Rigidbody2D rb;
@@ -25,8 +28,13 @@ public class Bullet : MonoBehaviour
         _ = StartCoroutine(CoReturn());
     }
 
-    public void SetDirection(Vector2 pos, Quaternion quaternion)
+    public void Init(int damage, float knockBackForce, float moveSpeed, int maxMonsterHits, Vector2 pos, Quaternion quaternion)
     {
+        this.damage = damage;
+        this.knockBackForce = knockBackForce;
+        this.moveSpeed = moveSpeed;
+        this.leftMonsterHits = maxMonsterHits;
+
         transform.position = pos;
         transform.rotation = quaternion;
         rb.velocity = transform.up * moveSpeed;
@@ -37,6 +45,11 @@ public class Bullet : MonoBehaviour
         if(collision.TryGetComponent<Monster>(out Monster monster))
         {
             monster.TakeDamage(damage, transform.up, knockBackForce);
+            leftMonsterHits--;
+            if(leftMonsterHits <= 0)
+            {
+                ObjPool.Instance.ReturnObj(ObjPoolType.Bullet, gameObject);
+            }
         }
     }
 

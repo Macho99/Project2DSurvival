@@ -5,11 +5,23 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour
 {
+    [SerializeField] private Sprite boxedSprite;
     [SerializeField] private bool useRealTime = false;
-    [SerializeField] private float delay = 0.5f;
+    [SerializeField] protected float damage = 5f;        //int
+    [SerializeField] protected float knockBackForce = 5f;
+    [SerializeField] protected float maxMonsterHits = 5f;//int
+
+    [Space(20)]
+    [SerializeField] protected float delay = 0.5f;
+
+    [Space(20)]
     [SerializeField] private bool useMagazine = false;
-    [SerializeField] private int magazineSize = 0;
-    [SerializeField] private float reloadTime = 3f;
+    [SerializeField] protected float magazineSize = 0f;  //int
+    [SerializeField] protected float reloadTime = 3f;
+
+    protected float floatErrorCorrector = 0.001f;
+
+    protected int level = 1;
 
     public Vector2 HandPos { get; protected set; }
 
@@ -22,6 +34,37 @@ public abstract class Weapon : MonoBehaviour
 
     protected Player player;
     protected Transform aimTrans;
+
+    protected virtual void Awake()
+    {
+        spRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        states = new WeaponState[(int)WeaponStateType.Size];
+
+        states[0] = new StateReady(this);
+        states[1] = new StateDelay(this);
+        states[2] = new StateReload(this);
+
+        curMagazineSize = (int)(magazineSize + floatErrorCorrector);
+
+        state = states[0];
+    }
+    protected void WeaponLevelUp(WeaponStatPerLevel statPerLevel)
+    {
+        level++;
+        damage          += statPerLevel.damage;
+        knockBackForce  += statPerLevel.knockBackForce;
+        maxMonsterHits  += statPerLevel.maxMonsterHits;
+        delay           += statPerLevel.delay;
+        magazineSize    += statPerLevel.magazineSize;
+        reloadTime      += statPerLevel.reloadTime;
+    }
+    public abstract void LevelUp();
+
+    public Sprite GetBoxedSprite()
+    {
+        return boxedSprite;
+    }
 
     public bool IsUseRealTime()
     {
@@ -66,7 +109,7 @@ public abstract class Weapon : MonoBehaviour
 
     public void SetCurMagazine()
     {
-        curMagazineSize = magazineSize;
+        curMagazineSize = (int) (magazineSize + floatErrorCorrector);
     }
 
     public bool IsUseMagazine()
@@ -110,20 +153,6 @@ public abstract class Weapon : MonoBehaviour
         state = states[(int)type];
     }
 
-    protected virtual void Awake()
-    {
-        spRenderer = GetComponentInChildren<SpriteRenderer>();
-
-        states = new WeaponState[(int)WeaponStateType.Size];
-
-        states[0] = new StateReady(this);
-        states[1] = new StateDelay(this);
-        states[2] = new StateReload(this);
-
-        curMagazineSize = magazineSize;
-
-        state = states[0];
-    }
 
     protected virtual void Start()
     {
@@ -156,4 +185,5 @@ public abstract class Weapon : MonoBehaviour
     }
 
     public abstract void Effect();
+
 }

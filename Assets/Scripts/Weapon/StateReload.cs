@@ -10,7 +10,26 @@ public class StateReload : WeaponState
 
     public override void Update()
     {
-        owner.SubReloadTime(Time.deltaTime);
+        float time;
+        if (owner.IsUseRealTime())
+        {
+            //스킬 선택 창 등 시간을 임의로 멈추었을 때
+            if (Time.timeScale < 0.001f)
+            {
+                time = Time.deltaTime;
+            }
+            else
+            {
+                time = Time.unscaledDeltaTime;
+            }
+        }
+        else
+        {
+            time = Time.deltaTime;
+        }
+
+        owner.SubReloadTime(time);
+
         if (owner.IsReloadEnd())
         {
             owner.SetCurMagazine();
