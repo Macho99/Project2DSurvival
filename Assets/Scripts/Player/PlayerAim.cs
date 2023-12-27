@@ -33,6 +33,7 @@ public class PlayerAim : MonoBehaviour
 
     private void Update()
     {
+        if (Time.timeScale < 0.001f) return;
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         float angle = Mathf.Atan2(mousePos.y - aimPivot.position.y, mousePos.x - aimPivot.position.x) * Mathf.Rad2Deg;
         aimPivot.rotation = Quaternion.Euler(0, 0, angle - 90f);

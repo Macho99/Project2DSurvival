@@ -15,6 +15,8 @@ public class StateReady : WeaponState
 
     public override void Use()
     {
+        if (Time.timeScale < 0.001f) return;
+
         owner.Effect();
         owner.SubMagazineSize();
         if (owner.IsTimeToReload())

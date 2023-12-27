@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CurWeaponList : MonoBehaviour
+public class CurWeaponState : MonoBehaviour
 {
     [SerializeField] Image weapon1;
     [SerializeField] Image weapon2;
@@ -11,6 +12,9 @@ public class CurWeaponList : MonoBehaviour
     [SerializeField] Sprite noneSprite;
     [SerializeField] Color curWeaponColor;
     [SerializeField] Color otherWeaponColor;
+    [SerializeField] TextMeshProUGUI weaponSummary;
+    [SerializeField] GameObject leftAmmoInfo;
+    [SerializeField] TextMeshProUGUI leftAmmoText;
 
     private Image[] weapons;
 
@@ -29,7 +33,7 @@ public class CurWeaponList : MonoBehaviour
         hand = PlaySceneMaster.Instance.Player.GetHand();
     }
 
-    public void UIUpdate()
+    public void WeaponChange()
     {
         if(hand == null)
         {
@@ -50,7 +54,31 @@ public class CurWeaponList : MonoBehaviour
             weapons[i].color = otherWeaponColor;
         }
 
-        int curWeapon = hand.GetCurWeaponIdx();
-        weapons[curWeapon].color = curWeaponColor;
+        int curWeaponIdx = hand.GetCurWeaponIdx();
+        weapons[curWeaponIdx].color = curWeaponColor;
+
+        string curWeaponName = hand.GetCurWeaponName();
+        if(curWeaponName == null)
+        {
+            weaponSummary.text = "";
+        }
+        else
+        {
+            weaponSummary.text = $"{curWeaponName} Lv.{hand.GetCurWeaponLevel()}";
+        }
+    }
+
+    public void LeftAmmoChange()
+    {
+        int? num = hand.GetLeftMagazineSize();
+        if(num == null)
+        {
+            leftAmmoInfo.SetActive(false);
+        }
+        else
+        {
+            leftAmmoInfo.SetActive(true);
+            leftAmmoText.text = $"X {num}";
+        }
     }
 }

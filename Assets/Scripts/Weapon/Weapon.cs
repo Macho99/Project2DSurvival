@@ -5,6 +5,9 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour
 {
+    [SerializeField] private string weaponName;
+    [Multiline] 
+    [SerializeField] private string weaponDescription;
     [SerializeField] private Sprite boxedSprite;
     [SerializeField] private bool useRealTime = false;
     [SerializeField] protected float damage = 5f;        //int
@@ -21,6 +24,7 @@ public abstract class Weapon : MonoBehaviour
 
     protected float floatErrorCorrector = 0.001f;
 
+    protected int maxLevel = 8;
     protected int level = 1;
 
     public Vector2 HandPos { get; protected set; }
@@ -49,6 +53,34 @@ public abstract class Weapon : MonoBehaviour
 
         state = states[0];
     }
+
+    public int GetLevel()
+    {
+        return level;
+    }
+
+    public int? GetLeftMagazineSize()
+    {
+        if (useMagazine)
+        {
+            return curMagazineSize;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public string GetName()
+    {
+        return weaponName;
+    }
+
+    public string GetDescription()
+    {
+        return weaponDescription;
+    }
+
     protected void WeaponLevelUp(WeaponStatPerLevel statPerLevel)
     {
         level++;
@@ -110,6 +142,7 @@ public abstract class Weapon : MonoBehaviour
     public void SetCurMagazine()
     {
         curMagazineSize = (int) (magazineSize + floatErrorCorrector);
+        player.CurMagazineSizeChange();
     }
 
     public bool IsUseMagazine()
@@ -122,6 +155,8 @@ public abstract class Weapon : MonoBehaviour
         if (!useMagazine) return;
 
         curMagazineSize--;
+
+        player.CurMagazineSizeChange();
     }
 
     public bool IsTimeToReload()
@@ -165,9 +200,9 @@ public abstract class Weapon : MonoBehaviour
         state.Update();
     }
 
-    public void FlipX(bool isFlip)
+    public void FlipX(bool flip)
     {
-        if (isFlip)
+        if (flip)
         {
             spRenderer.gameObject.transform.localPosition = new Vector2(-HandPos.x, HandPos.y);
             spRenderer.flipX = true;
@@ -177,6 +212,15 @@ public abstract class Weapon : MonoBehaviour
             spRenderer.gameObject.transform.localPosition = HandPos;
             spRenderer.flipX = false;
         }
+    }
+
+    protected bool IsMaxLevel()
+    {
+        if(level >= maxLevel)
+        {
+            return true;
+        }
+        return false;
     }
 
     public void Use()

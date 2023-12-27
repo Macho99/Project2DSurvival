@@ -45,6 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 645075b088e3cf24c874fd2ed5258098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponName: ShotGun
+  weaponDescription: '+ damage
+
+    + potential
+
+    - hard'
   boxedSprite: {fileID: -762074860, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   useRealTime: 0
   damage: 5
@@ -53,7 +59,7 @@ MonoBehaviour:
   delay: 1
   useMagazine: 1
   magazineSize: 3
-  reloadTime: 5
+  reloadTime: 3
   accuracy: 0
   bulletSpeed: 5
   numOfBulletPerShot: 2
@@ -61,7 +67,7 @@ MonoBehaviour:
   statPerLevel:
     damage: 1
     knockBackForce: 0
-    maxMonsterHits: 0
+    maxMonsterHits: 0.5
     delay: -0.1
     magazineSize: 1
     reloadTime: -0.2

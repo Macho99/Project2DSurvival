@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Timeline;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
@@ -14,7 +13,6 @@ public class Monster : MonoBehaviour
     [SerializeField] private int curHp = 10;
     [SerializeField] private int maxHp = 10;
     [SerializeField] private float returnDuration = 5f;
-    [SerializeField] private ExpCoin expCoinPrefab;
 
     private BoxCollider2D col;
     private Rigidbody2D rb;
@@ -137,7 +135,7 @@ public class Monster : MonoBehaviour
         StartCoroutine(CoReturnObj());
         _ = GameManager.Data;
 
-        ExpCoin expCoin = Instantiate(expCoinPrefab);
+        ExpCoin expCoin = ObjPool.Instance.AllocateObj(ObjPoolType.Coin).GetComponent<ExpCoin>();
         expCoin.Init(ExpLevel.Lv0, 5);
         expCoin.transform.position = transform.position + Random.insideUnitSphere * 0.5f;
 

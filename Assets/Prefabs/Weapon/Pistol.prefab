@@ -45,6 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 645075b088e3cf24c874fd2ed5258098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponName: Pistol
+  weaponDescription: '+ damage
+
+    + delay
+
+    - ammo'
   boxedSprite: {fileID: -205726582, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   useRealTime: 0
   damage: 5
@@ -53,7 +59,7 @@ MonoBehaviour:
   delay: 0.2
   useMagazine: 1
   magazineSize: 5
-  reloadTime: 3
+  reloadTime: 1.5
   accuracy: 0
   bulletSpeed: 5
   numOfBulletPerShot: 1

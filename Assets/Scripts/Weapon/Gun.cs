@@ -52,6 +52,8 @@ public class Gun : Weapon
 
     public override void LevelUp()
     {
+        if (IsMaxLevel()) return;
+
         WeaponLevelUp(statPerLevel);
         accuracy         += statPerLevel.accuracy;
         bulletSpeed      += statPerLevel.bulletSpeed;

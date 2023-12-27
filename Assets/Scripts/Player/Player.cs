@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -14,8 +15,9 @@ public class Player : MonoBehaviour
     [SerializeField] UnityEvent onKillMonster;
     [SerializeField] UnityEvent onDelayChange;
     [SerializeField] UnityEvent onReloadTimeChange;
+    [SerializeField] UnityEvent onCurMagazineSizeChange;
+    [SerializeField] UnityEvent onGameover;
 
-    private PlayerMove playerMove;
     private PlayerAim playerAim;
     private Hand hand;
 
@@ -40,7 +42,6 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        playerMove = GetComponent<PlayerMove>();
         playerAim = GetComponent<PlayerAim>();
         hand = GetComponentInChildren<Hand>();
 
@@ -88,6 +89,7 @@ public class Player : MonoBehaviour
         onLevelChange?.Invoke();
         onDelayChange?.Invoke();
         onReloadTimeChange?.Invoke();
+        onCurMagazineSizeChange?.Invoke();
     }
 
     public Transform GetAimTransform()
@@ -189,7 +191,16 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
+        GetComponent<Animator>().SetTrigger("Dead");
+        StartCoroutine(CoGameover());
+    }
 
+    private IEnumerator CoGameover()
+    {
+        yield return new WaitForSeconds(3f);
+        onGameover?.Invoke();
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene("TitleScene");
     }
 
     public void DelayChanged(float ratio)
@@ -202,5 +213,10 @@ public class Player : MonoBehaviour
     {
         ReloadTimeRatio = ratio;
         onReloadTimeChange?.Invoke();
+    }
+
+    public void CurMagazineSizeChange()
+    {
+        onCurMagazineSizeChange?.Invoke();
     }
 }

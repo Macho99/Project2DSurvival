@@ -7,10 +7,10 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
     private static DataManager dataManager;
-    private static SkillManager skillManager;
+    //private static SkillManager skillManager;
     public static GameManager Instance { get { return instance; } }
     public static DataManager Data { get { return dataManager; } }
-    public static SkillManager Skill { get { return skillManager; } }
+    //public static SkillManager Skill { get { return skillManager; } }
 
     [SerializeField] DataManager dataManagerPrefab;
     [SerializeField] SkillManager skillManagerPrefab;
@@ -24,16 +24,18 @@ public class GameManager : MonoBehaviour
         }
 
         instance = this;
+        dataManager = GetComponentInChildren<DataManager>();
+        //skillManager= GetComponentInChildren<SkillManager>();
         DontDestroyOnLoad(gameObject);
         InitManagers();
     }
 
     private void InitManagers()
     {
-        GameObject dataObj = Instantiate(dataManagerPrefab).gameObject;
-        dataObj.transform.parent = transform;
+        //dataManager = Instantiate(dataManagerPrefab);
+        //dataManager.transform.parent = transform;
 
-        GameObject skillObj = Instantiate(skillManagerPrefab).gameObject;
-        skillObj.transform.parent = transform;
+        //skillManager = Instantiate(skillManagerPrefab);
+        //skillManager.transform.parent = transform;
     }
 }
