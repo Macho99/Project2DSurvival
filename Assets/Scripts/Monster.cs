@@ -19,7 +19,6 @@ public class Monster : MonoBehaviour
     private BoxCollider2D col;
     private Rigidbody2D rb;
     private SpriteRenderer[] spRenderers;
-    private int[] initSpSortingOrder;
     private Animator anim;
     private Coroutine moveCoroutine;
     private Player player;
@@ -30,11 +29,6 @@ public class Monster : MonoBehaviour
         col = GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
         spRenderers = GetComponentsInChildren<SpriteRenderer>();
-        initSpSortingOrder = new int[spRenderers.Length];
-        for(int i = 0; i < spRenderers.Length; i++)
-        {
-            initSpSortingOrder[i] = spRenderers[i].sortingOrder;
-        }
         anim = GetComponent<Animator>();
         initSprite = spRenderers[0].sprite;
     }
@@ -147,9 +141,9 @@ public class Monster : MonoBehaviour
         expCoin.Init(ExpLevel.Lv0, 5);
         expCoin.transform.position = transform.position + Random.insideUnitSphere * 0.5f;
 
-        foreach(var spRenderer in spRenderers)
+        foreach(var renderer in spRenderers)
         {
-            spRenderer.sortingOrder = -1;
+            renderer.sortingLayerName = "DeadBody";
         }
 
         player.KillMonster();
@@ -162,7 +156,8 @@ public class Monster : MonoBehaviour
         for (int i = 0; i < spRenderers.Length; i++)
         {
             SpriteRenderer renderer = spRenderers[i];
-            renderer.sortingOrder = initSpSortingOrder[i];
+            renderer.sortingLayerName = "Monster";
+
 
             Color color = renderer.color;
             color.a = 1f;

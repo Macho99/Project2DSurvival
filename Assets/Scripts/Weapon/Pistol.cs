@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Pistol : Weapon
 {
+    [SerializeField] private float accuracy = 0f;
     protected override void Awake ()
     {
         base.Awake();
