@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum ObjPoolType
 {
@@ -33,8 +34,15 @@ public class ObjPool : MonoBehaviour
     private Transform runtimeObjFolder;
     private Transform poolObjFolder;
 
+
+    //임시 테스트용
+    public UnityEvent onMonsterCountChange;
+    public int monsterCount;
+
+
     private void Awake()
     {
+        monsterCount = 0;
         if(instance != null)
         {
             Destroy(gameObject);
@@ -82,6 +90,12 @@ public class ObjPool : MonoBehaviour
 
     public GameObject AllocateObj(ObjPoolType type)
     {
+        if(type == ObjPoolType.Monster)
+        {
+            monsterCount++;
+            onMonsterCountChange?.Invoke();
+        }
+
         GameObject obj;
         if (pools[(int) type].Count == 0)
         {
@@ -99,6 +113,11 @@ public class ObjPool : MonoBehaviour
 
     public void ReturnObj(ObjPoolType type, GameObject obj)
     {
+        if (type == ObjPoolType.Monster)
+        {
+            monsterCount--;
+            onMonsterCountChange?.Invoke();
+        }
         pools[(int) type].Push(obj);
         obj.transform.parent = poolElements[(int)type].poolFolder;
         obj.SetActive(false);

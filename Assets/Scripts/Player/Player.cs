@@ -179,7 +179,7 @@ public class Player : MonoBehaviour
         if( CurHp <= 0)
         {
             CurHp = 0;
-            Die();
+            //Die();
         }
     }
 

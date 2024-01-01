@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,6 +15,11 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] DataManager dataManagerPrefab;
     [SerializeField] SkillManager skillManagerPrefab;
+
+    public UnityEvent onFpsChange;
+    public int fps;
+    private int frameCnt;
+    private float timeCnt;
 
     private void Awake()
     {
@@ -28,6 +34,22 @@ public class GameManager : MonoBehaviour
         //skillManager= GetComponentInChildren<SkillManager>();
         DontDestroyOnLoad(gameObject);
         InitManagers();
+
+        frameCnt = 0;
+        timeCnt = 0f;
+    }
+
+    private void Update()
+    {
+        frameCnt++;
+        timeCnt += Time.deltaTime;
+        if(timeCnt > 1f)
+        {
+            timeCnt -= 1f;
+            fps = frameCnt;
+            frameCnt = 0;
+            onFpsChange?.Invoke();
+        }
     }
 
     private void InitManagers()

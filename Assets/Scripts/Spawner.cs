@@ -26,9 +26,9 @@ public class Spawner : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
             spawnDuration -= spawnDurationDiff;
-            if(spawnDuration < 0.1f)
+            //if(spawnDuration < 0.1f)
             {
-                spawnDuration = 0.1f;
+            //    spawnDuration = 0.1f;
             }
             onSecondPassed?.Invoke();
         }
